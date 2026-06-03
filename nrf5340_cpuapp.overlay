@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2024 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+#include <zephyr/dt-bindings/ipc_service/static_vrings.h>
+
+/ {
+    chosen {
+        nordic,pm-ext-flash = &mx25r64;
+        //dopisanie modbusa
+        zephyr,modbus-serial = &modbus0;
+    };
+};
+
+//priorytet komunikacji miedzyrdzeniowej
+&ipc0 {
+    zephyr,priority = <0 PRIO_COOP>;
+};
+
+//uart1 - modbus - P0.19 (TX) i P0.21 (RX)
+&uart1 {
+    status = "okay";
+    pinctrl-0 = <&uart1_default>;
+    pinctrl-1 = <&uart1_sleep>;
+    pinctrl-names = "default", "sleep";
+    current-speed = <9600>;
+
+    modbus0: modbus0 {
+        compatible = "zephyr,modbus-serial";
+        status = "okay";
+    };
+};
+
+&adc { status = "disabled"; };
+&i2c1 { status = "disabled"; };
+&pwm0 { status = "disabled"; };
+&spi2 { status = "disabled"; };
+&usbd { status = "disabled"; };
